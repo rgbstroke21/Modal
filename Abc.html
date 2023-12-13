@@ -3,7 +3,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Popup Title</h5>
@@ -12,10 +12,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <!-- Content of the popup, for example, a table populated from the DataFrame -->
-        <table class="table">
-          <!-- Your DataFrame content goes here -->
-        </table>
+        <div class="table-responsive">
+          <!-- Content of the popup, for example, a table populated from the DataFrame -->
+          <table class="table">
+            <!-- Your DataFrame content goes here -->
+          </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
