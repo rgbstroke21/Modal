@@ -1,3 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Centered Modals</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Custom CSS to center modals */
+    .modal {
+      text-align: center;
+      padding: 0!important;
+    }
+
+    .modal:before {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+      margin-right: -4px;
+    }
+
+    .modal-dialog {
+      display: inline-block;
+      text-align: left;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
 <!-- Button to trigger the modal -->
 <a href="#" data-toggle="modal" data-target="#exampleModal">Open Popup</a>
 
@@ -12,26 +42,24 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="table-responsive">
-          <!-- Your DataFrame content in HTML format -->
-          <!-- Replace this placeholder content with your DataFrame HTML -->
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <!-- Add more table headers as needed -->
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <!-- Add more table data rows as needed -->
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <!-- Your DataFrame content in HTML format -->
+        <!-- Replace this placeholder content with your DataFrame HTML -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Column 1</th>
+              <th>Column 2</th>
+              <!-- Add more table headers as needed -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data 1</td>
+              <td>Data 2</td>
+              <!-- Add more table data rows as needed -->
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -39,3 +67,11 @@
     </div>
   </div>
 </div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
