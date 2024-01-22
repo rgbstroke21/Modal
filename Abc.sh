@@ -1,14 +1,11 @@
 #!/bin/bash
 
-current_day=$(date +%u)
-current_date=$(date +%Y-%m-%d)
+# Define HDFS paths
+input_path="hdfs://your_input_path.csv"
+output_path="hdfs://your_output_path.csv"
 
-case $current_day in
-    1) Start_date=$(date -d "$current_date -$(($(date +%u -d $current_date) + 2)) days" +%Y-%m-%d);;
-    2) Start_date=$(date -d "$current_date +$(($(date +%u -d $current_date) + 1)) days" +%Y-%m-%d);;
-    3) Start_date=$(date -d "$current_date -$(($(date +%u -d $current_date) + 2)) days" +%Y-%m-%d);;
-    4|5) Start_date=$(date -d "$current_date -3 days" +%Y-%m-%d);;
-    *) echo "Not handling the weekend (Saturday/Sunday) in this script.";;
-esac
+# Define columns to keep
+selected_columns="1,2,3"  # Adjust column indices as needed
 
-echo "Start_date: $Start_date"
+# Use awk to filter columns
+hadoop fs -cat $input_path | awk -v cols="$selected_columns" 'BEGIN {FS=OFS=","} {split(cols, arr, ","); for (i in arr) printf $arr[i] (i==length(arr) ? ORS : OFS)}' | hadoop fs -put - $output_path
