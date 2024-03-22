@@ -1,14 +1,40 @@
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 
-// Assuming your DataFrame is named 'df' and the column containing the array of structs is named 'arrayOfStructs'
+object NullCountFunction {
+  // Define a case class to represent the struct
+  case class MyStruct(a: String, b: Int)
 
-// Explode the array column
-val explodedDF = df.withColumn("exploded", explode($"arrayOfStructs"))
+  // Define the function to count nulls in the 'a' field of each struct array
+  def countNulls(arr: Seq[MyStruct]): Int = {
+    arr.count(_.a == null)
+  }
 
-// Add a column containing 1 for null "a" values and 0 otherwise
-val nullACountDF = explodedDF.withColumn("null_a_count", when($"exploded.a".isNull, 1).otherwise(0))
+  def main(args: Array[String]): Unit = {
+    // Initialize SparkSession
+    val spark = SparkSession.builder()
+      .appName("NullCountFunction")
+      .master("local[*]")
+      .getOrCreate()
 
-// Group by the original DataFrame and sum the counts to get the total count of null "a" values
-val countNullA = nullACountDF.groupBy().agg(sum($"null_a_count").alias("null_a_count"))
+    import spark.implicits._
 
-countNullA.show()
+    // Sample data
+    val data = Seq(
+      (1, Seq(MyStruct("foo", 10), MyStruct(null, 20), MyStruct("bar", 30))),
+      (2, Seq(MyStruct("abc", 40), MyStruct(null, 50), MyStruct("def", 60))),
+      (3, Seq(MyStruct(null, 70), MyStruct("xyz", 80), MyStruct(null, 90)))
+    )
+
+    // Create DataFrame from sample data
+    val df = data.toDF("id", "struct_array")
+
+    // Define the UDF
+    val countNullsUDF = udf((arr: Seq[Row]) => countNulls(arr.map(r => MyStruct(r.getString(0), r.getInt(1)))))
+
+    // Apply the UDF to the DataFrame
+    val result = df.withColumn("null_count", countNullsUDF($"struct_array"))
+
+    result.show()
+  }
+}
