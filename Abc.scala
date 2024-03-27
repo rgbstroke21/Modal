@@ -38,3 +38,11 @@ object NullCountFunction {
     result.show()
   }
 }
+
+// Define a UDF to drop duplicates in sequence
+    val dropDuplicatesUDF = udf((rows: Seq[Row]) => {
+      rows.foldLeft(List.empty[Row]) { (acc, row) =>
+        if (acc.isEmpty || acc.head != row) row :: acc
+        else acc
+      }.reverse
+    })
