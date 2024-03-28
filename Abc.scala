@@ -46,3 +46,37 @@ object NullCountFunction {
         else acc
       }.reverse
     })
+
+
+
+// Import required libraries
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.functions.udf
+
+// Define your UDF function
+val iterateOverArrayUDF = udf((arrayOfArrays: Seq[Seq[Row]]) => {
+  // Iterate over the outer array
+  for (arr <- arrayOfArrays) {
+    // Iterate over the inner array
+    for (row <- arr) {
+      // Convert the Row to an array of Any and iterate over it
+      val rowArray = row.toSeq.toArray
+      for (element <- rowArray) {
+        println(element) // Or do whatever operation you need here
+      }
+    }
+  }
+})
+
+// Example array of arrays
+val arrayOfArrays: Seq[Seq[Row]] = Seq(
+  Seq(Row(1, "A"), Row(2, "B"), Row(3, "C")),
+  Seq(Row(4, "D"), Row(5, "E"), Row(6, "F")),
+  Seq(Row(7, "G"), Row(8, "H"), Row(9, "I"))
+)
+
+// Apply the UDF to your DataFrame or Dataset
+val result = someDataFrame.withColumn("resultColumn", iterateOverArrayUDF(arrayOfArrays))
+
+// Show the result
+result.show()
