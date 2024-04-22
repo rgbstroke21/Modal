@@ -26,9 +26,9 @@ class ParquetToSequenceFileTest extends FunSuite with BeforeAndAfterAll {
     inputDF.rdd.map(row => (row.getAs[String]("key"), row.getAs[String]("value")))
               .saveAsSequenceFile(outputPath)
     
-    val outputRDD = spark.sparkContext.sequenceFile[String, String](outputPath)
-    val outputCount = outputRDD.count()
+    val expectedRDD = inputDF.rdd.map(row => (row.getAs[String]("key"), row.getAs[String]("value")))
+    val actualRDD = spark.sparkContext.sequenceFile[String, String](outputPath)
     
-    assert(outputCount == inputDF.count(), "Number of records in input and output should match")
+    assert(expectedRDD.collect() === actualRDD.collect(), "RDDs should match")
   }
 }
