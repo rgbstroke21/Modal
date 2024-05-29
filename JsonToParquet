@@ -1,0 +1,29 @@
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
+public class JsonToParquet {
+    public static void main(String[] args) {
+        // Initialize SparkSession
+        SparkSession spark = SparkSession.builder()
+                .appName("JsonToParquet")
+                .master("local[*]")  // Adjust as needed
+                .getOrCreate();
+
+        // Path to the JSON file
+        String jsonFilePath = "path/to/your/input.json";
+        // Path to the output Parquet file
+        String parquetFilePath = "path/to/your/output.parquet";
+
+        // Read the JSON file with multiline true
+        Dataset<Row> jsonData = spark.read()
+                .option("multiline", "true")
+                .json(jsonFilePath);
+
+        // Write the data to a Parquet file
+        jsonData.write().parquet(parquetFilePath);
+
+        // Stop the SparkSession
+        spark.stop();
+    }
+}
