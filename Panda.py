@@ -13,12 +13,15 @@ data = {
 # Create DataFrame
 df = pd.DataFrame(data)
 
-# Pivot the DataFrame to achieve the desired result
-result_df = df.pivot_table(index=['a', 'b', 'c', 'd'], columns='e', values='f').reset_index()
+# Define a function to reshape the group into a single row
+def reshape_group(group):
+    new_columns = {}
+    for idx, row in group.iterrows():
+        new_columns[row['e']] = row['f']
+    return pd.Series(new_columns)
 
-# Rename columns to match the required output
-result_df.columns.name = None  # Remove the column group name
-result_df = result_df.rename(columns={'new1': 'new1', 'new2': 'new2', 'new3': 'new3'})
+# Group by a, b, c, d and apply the reshape function
+result_df = df.groupby(['a', 'b', 'c', 'd']).apply(reshape_group).reset_index()
 
 # Display the result
 print(result_df)
