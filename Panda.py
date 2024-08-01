@@ -1,27 +1,31 @@
 import pandas as pd
 
-# Sample data
+# Example DataFrame
 data = {
-    'a': [1, 1, 1, 2, 2, 2],
-    'b': ['x', 'x', 'x', 'y', 'y', 'y'],
-    'c': ['foo', 'foo', 'foo', 'bar', 'bar', 'bar'],
-    'd': ['one', 'one', 'one', 'two', 'two', 'two'],
-    'e': ['new1', 'new2', 'new3', 'new1', 'new2', 'new3'],
-    'f': [10, 20, 30, 40, 50, 60]
+    'a': [1, 1, 2, 3, 3],
+    'b': ['value1', '', 'value2', '', 'value3'],
+    'c': ['', 'value2', '', 'value5', ''],
+    'd': ['', '', 'value6', 'value7', '']
 }
 
-# Create DataFrame
 df = pd.DataFrame(data)
 
-# Define a function to reshape the group into a single row
-def reshape_group(group):
-    new_columns = {}
-    for idx, row in group.iterrows():
-        new_columns[row['e']] = row['f']
-    return pd.Series(new_columns)
+# Display original DataFrame
+print("Original DataFrame:")
+print(df)
 
-# Group by a, b, c, d and apply the reshape function
-result_df = df.groupby(['a', 'b', 'c', 'd']).apply(reshape_group).reset_index()
+# Define a function to combine non-empty values
+def combine_non_empty(series):
+    # Join non-empty values with a separator (e.g., ', ')
+    return ', '.join(series[series != ''])
 
-# Display the result
-print(result_df)
+# Group by 'a' and apply the combine_non_empty function to each column
+df_combined = df.groupby('a').agg({
+    'b': combine_non_empty,
+    'c': combine_non_empty,
+    'd': combine_non_empty
+}).reset_index()
+
+# Display the DataFrame after combining non-empty values
+print("\nDataFrame after combining non-empty values:")
+print(df_combined)
